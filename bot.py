@@ -156,6 +156,7 @@ def build_resume_text(delete=False):
     elements = [[],[],[]]
 
     for line in arc:
+        print(line)
         print(re_expression.match(line).groups())
         pass
 
