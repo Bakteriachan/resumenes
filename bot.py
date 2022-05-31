@@ -123,12 +123,10 @@ def get_past_link():
         link = arc.readline()
         if link[-1] == '\n':
             link = link[:-1]
-        return (int(number),link)
         arc.close()
-        upload_file(f"htdocs/resumenes_robot/{past}",past)
+        return (int(number),link)
     except:
         return (14,'https://t.me/unCanalWe/56')
-    return None
 
 #saves link of sent resume
 def save_link(curr_num,link):
@@ -148,40 +146,30 @@ def save_link(curr_num,link):
 
 #builds resume text
 def build_resume_text(delete=False):
-    num,pastLink = get_past_link()
-    ans = f'「Rezumen {parse_text(str(num+1))}」\n\n•*[Rezumen {parse_text(str(num))}]({pastLink})*\n\n'
+    num,pastlink = get_past_link()
     arc = download_file(f"htdocs/resumenes_robot/{resume}",open_type="r")
-    res = []
+    
+    rs_string = f'RESUMEN {num}\n-> [RESUMEN {num-1}]({pastlink})\n\n'
+
+    re_expression = re.compile(r'\(([\w\W]+)\)\[([\w\W]+)\][\s]?([1-3])')
+
+    elements = [[],[],[]]
+
     for line in arc:
-        try:
-            parsed_link = parse_link(line)
-        except:
-            print(f'Error : {line}')
-            continue
-        if len(ans + '• *' + parsed_link + '*\n') >= 4096:
-            res.append(ans)
-            ans = ''
-        ans += '• *' + parse_link(line) + '*\n\n'
-    ans += '\nⓘ • `Uza el` \\#rezumen `para navegar mejor por todo el kontenido del Kanal\\.`'
-    res.append(ans)
-    arc.close()
-    upload_file(f"htdocs/resumenes_robot/{resume}",resume)
-    if delete:
-        arc = open(resume,'w')
+        print(re_expression.match(line).groups())
+        pass
 
-        arc.close()
+    return None
 
-        upload_file(f"htdocs/resumenes_robot/{resume}",resume)
-    return res
 
 
 #add element to resume
 
-def add_element(element):
+def add_element(element,position=1):
 
     arc = download_file(f"htdocs/resumenes_robot/{resume}")
 
-    arc.write(element)
+    arc.write(f'{element}{position}')
 
     arc.close()
 
@@ -221,7 +209,7 @@ def send_resume(update,context,text):
 
 #add unprocessed post element to file
 
-def add_unproc_post(update=None,link=None,name=None):
+def add_unproc_post(update=None,link=None,name=None,position=1):
     #this functions is used to add manualy or automatic
     #by recving channel post
     if name==None and link == None and update == None:
@@ -249,7 +237,7 @@ def add_unproc_post(update=None,link=None,name=None):
             break
         element_name += i
     arc = download_file(f"htdocs/resumenes_robot/{unprocessed}")
-    arc.write(f'[{element_name}]({Link})\n')
+    arc.write(f'[{element_name}]({Link}){position}\n')
     arc.close()
     upload_file(f"htdocs/resumenes_robot/{unprocessed}",unprocessed)
 
@@ -391,17 +379,17 @@ def plus(update,context):
     El comando se usa de la siguiente manera:
     /plus (*post_name*)[*post_link*] position
     example:
-    /plus (NOMBRE)[https://t.me/username/1] 2
+    /plus (NOMBRE)[https://t.me/username/1]
     '''
     if not validate_command(update):
         sendMessage(update,context,f'Este bot no lo puedes usar')
         return
 
     caption = update.message['text'][5:].strip()
-    match = re.fullmatch(r'\(([\w\W]+)\)\[([\w\W]+)\][\s]+([1-3])', caption)
+    match = re.fullmatch(r'\(([\w\W]+)\)\[([\w\W]+)\]', caption)
 
-    print(match.groups())
-    
+    name,link = math.groups()
+
     add_unproc_post(link=link,name=name)
     sendMessage(update,context,"Elemento añadido a la lista de Posts disponibles")
     
