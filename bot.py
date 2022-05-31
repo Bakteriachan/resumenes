@@ -389,28 +389,18 @@ def remove(update,context):
 def plus(update,context):
     '''
     El comando se usa de la siguiente manera:
-    /plus (*post_name*)[*post_link*]
+    /plus (*post_name*)[*post_link*] position
+    example:
+    /plus (NOMBRE)[https://t.me/username/1] 2
     '''
     if not validate_command(update):
         sendMessage(update,context,f'Este bot no lo puedes usar')
         return
 
     caption = update.message['text'][5:].strip()
-    isIn = [False,False]
-    name,link = "",""
-    for i in caption:
-        if i == ']':
-            isIn[1] = False
-        if i == ')':
-            isIn[0] = False
-        if isIn[0]:
-            name += i
-        if isIn[1]:
-            link += i
-        if i == '(':
-            isIn[0] = True
-        if i == '[':
-            isIn[1] = True
+    match = re.fullmatch(r'(\([\w\W]\))\[([\w\W])\][\s]+[1-3]', caption)
+
+    print(match.groups())
     
     add_unproc_post(link=link,name=name)
     sendMessage(update,context,"Elemento añadido a la lista de Posts disponibles")
