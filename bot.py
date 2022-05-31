@@ -151,7 +151,7 @@ def build_resume_text(delete=False):
     
     rs_string = f'RESUMEN {num}\n-> [RESUMEN {num-1}]({pastlink})\n\n'
 
-    re_expression = re.compile(r'\(([\w\W]+)\)\[([\w\W]+)\][\s]?([1-3])')
+    re_expression = re.compile(r'\(([\w\W]+)\)\[([\w\W]+)\][\s]?([1-3]?)')
 
     elements = [[],[],[]]
 
@@ -160,7 +160,7 @@ def build_resume_text(delete=False):
         print(re_expression.match(line).groups())
         pass
 
-    return None
+    return 'aaaa'
 
 
 
