@@ -398,7 +398,7 @@ def plus(update,context):
         return
 
     caption = update.message['text'][5:].strip()
-    match = re.fullmatch(r'(\([\w\W]\))\[([\w\W])\][\s]+[1-3]', caption)
+    match = re.fullmatch(r'\(([\w\W]+)\)\[([\w\W]+)\][\s]+([1-3])', caption)
 
     print(match.groups())
     
