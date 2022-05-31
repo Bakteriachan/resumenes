@@ -157,7 +157,7 @@ def build_resume_text(delete=False):
 
     for line in arc:
         print(line)
-        print(re_expression.match(line).groups())
+        print(re_expression.match(line))
         pass
 
     return 'aaaa'
